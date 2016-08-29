@@ -1,28 +1,3 @@
-/*
- * Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
 package java.lang;
 
 import java.util.Arrays;
@@ -4583,7 +4558,6 @@ class Character implements java.io.Serializable, Comparable<Character> {
      * values is a valid
      * <a href="http://www.unicode.org/glossary/#surrogate_pair">
      * Unicode surrogate pair</a>.
-
      * <p>This method is equivalent to the expression:
      * <blockquote><pre>
      * isHighSurrogate(high) && isLowSurrogate(low)

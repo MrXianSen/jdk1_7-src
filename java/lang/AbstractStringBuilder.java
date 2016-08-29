@@ -22,7 +22,6 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     char[] value;
 
     /**
-     * The count is the number of characters used.
      * 已经使用的字符数
      */
     int count;
@@ -34,67 +33,38 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
-     * Creates an AbstractStringBuilder of the specified capacity.
+     * 初始化一个Builder，并设置一个初始容量
      */
     AbstractStringBuilder(int capacity) {
         value = new char[capacity];
     }
 
     /**
-     * Returns the length (character count).
-     *
-     * @return  the length of the sequence of characters currently
-     *          represented by this object
+     * 获取当前字符串中的长度
      */
     public int length() {
         return count;
     }
 
     /**
-     * Returns the current capacity. The capacity is the amount of storage
-     * available for newly inserted characters, beyond which an allocation
-     * will occur.
-     *
-     * @return  the current capacity
+     * 获取当前Builder的容量
+     * 注意区别length()方法
      */
     public int capacity() {
         return value.length;
     }
 
-    /**
-     * Ensures that the capacity is at least equal to the specified minimum.
-     * If the current capacity is less than the argument, then a new internal
-     * array is allocated with greater capacity. The new capacity is the
-     * larger of:
-     * <ul>
-     * <li>The <code>minimumCapacity</code> argument.
-     * <li>Twice the old capacity, plus <code>2</code>.
-     * </ul>
-     * If the <code>minimumCapacity</code> argument is nonpositive, this
-     * method takes no action and simply returns.
-     *
-     * @param   minimumCapacity   the minimum desired capacity.
-     */
     public void ensureCapacity(int minimumCapacity) {
         if (minimumCapacity > 0)
             ensureCapacityInternal(minimumCapacity);
     }
-
-    /**
-     * This method has the same contract as ensureCapacity, but is
-     * never synchronized.
-     */
     private void ensureCapacityInternal(int minimumCapacity) {
         // overflow-conscious code
         if (minimumCapacity - value.length > 0)
             expandCapacity(minimumCapacity);
     }
-
-    /**
-     * This implements the expansion semantics of ensureCapacity with no
-     * size check or synchronization.
-     */
     void expandCapacity(int minimumCapacity) {
+        //扩展Builder容量
         int newCapacity = value.length * 2 + 2;
         if (newCapacity - minimumCapacity < 0)
             newCapacity = minimumCapacity;
@@ -103,6 +73,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
                 throw new OutOfMemoryError();
             newCapacity = Integer.MAX_VALUE;
         }
+
         value = Arrays.copyOf(value, newCapacity);
     }
 
@@ -120,33 +91,12 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
-     * Sets the length of the character sequence.
-     * The sequence is changed to a new character sequence
-     * whose length is specified by the argument. For every nonnegative
-     * index <i>k</i> less than <code>newLength</code>, the character at
-     * index <i>k</i> in the new character sequence is the same as the
-     * character at index <i>k</i> in the old sequence if <i>k</i> is less
-     * than the length of the old character sequence; otherwise, it is the
-     * null character <code>'&#92;u0000'</code>.
-     *
-     * In other words, if the <code>newLength</code> argument is less than
-     * the current length, the length is changed to the specified length.
-     * <p>
-     * If the <code>newLength</code> argument is greater than or equal
-     * to the current length, sufficient null characters
-     * (<code>'&#92;u0000'</code>) are appended so that
-     * length becomes the <code>newLength</code> argument.
-     * <p>
-     * The <code>newLength</code> argument must be greater than or equal
-     * to <code>0</code>.
-     *
-     * @param      newLength   the new length
-     * @throws     IndexOutOfBoundsException  if the
-     *               <code>newLength</code> argument is negative.
+     * 给Builder的字符串设置一个新的长度
      */
     public void setLength(int newLength) {
         if (newLength < 0)
             throw new StringIndexOutOfBoundsException(newLength);
+        //确保新的长度小于数组的容量
         ensureCapacityInternal(newLength);
 
         if (count < newLength) {
@@ -158,21 +108,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
-     * Returns the <code>char</code> value in this sequence at the specified index.
-     * The first <code>char</code> value is at index <code>0</code>, the next at index
-     * <code>1</code>, and so on, as in array indexing.
-     * <p>
-     * The index argument must be greater than or equal to
-     * <code>0</code>, and less than the length of this sequence.
-     *
-     * <p>If the <code>char</code> value specified by the index is a
-     * <a href="Character.html#unicode">surrogate</a>, the surrogate
-     * value is returned.
-     *
-     * @param      index   the index of the desired <code>char</code> value.
-     * @return     the <code>char</code> value at the specified index.
-     * @throws     IndexOutOfBoundsException  if <code>index</code> is
-     *             negative or greater than or equal to <code>length()</code>.
+     * 返回在index上的字符
      */
     public char charAt(int index) {
         if ((index < 0) || (index >= count))
@@ -292,34 +228,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
-     * Characters are copied from this sequence into the
-     * destination character array <code>dst</code>. The first character to
-     * be copied is at index <code>srcBegin</code>; the last character to
-     * be copied is at index <code>srcEnd-1</code>. The total number of
-     * characters to be copied is <code>srcEnd-srcBegin</code>. The
-     * characters are copied into the subarray of <code>dst</code> starting
-     * at index <code>dstBegin</code> and ending at index:
-     * <p><blockquote><pre>
-     * dstbegin + (srcEnd-srcBegin) - 1
-     * </pre></blockquote>
-     *
-     * @param      srcBegin   start copying at this offset.
-     * @param      srcEnd     stop copying at this offset.
-     * @param      dst        the array to copy the data into.
-     * @param      dstBegin   offset into <code>dst</code>.
-     * @throws     NullPointerException if <code>dst</code> is
-     *             <code>null</code>.
-     * @throws     IndexOutOfBoundsException  if any of the following is true:
-     *             <ul>
-     *             <li><code>srcBegin</code> is negative
-     *             <li><code>dstBegin</code> is negative
-     *             <li>the <code>srcBegin</code> argument is greater than
-     *             the <code>srcEnd</code> argument.
-     *             <li><code>srcEnd</code> is greater than
-     *             <code>this.length()</code>.
-     *             <li><code>dstBegin+srcEnd-srcBegin</code> is greater than
-     *             <code>dst.length</code>
-     *             </ul>
+     * 获取srcEnd - srcBegin个字符串
      */
     public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
     {
@@ -333,18 +242,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
-     * The character at the specified index is set to <code>ch</code>. This
-     * sequence is altered to represent a new character sequence that is
-     * identical to the old character sequence, except that it contains the
-     * character <code>ch</code> at position <code>index</code>.
-     * <p>
-     * The index argument must be greater than or equal to
-     * <code>0</code>, and less than the length of this sequence.
-     *
-     * @param      index   the index of the character to modify.
-     * @param      ch      the new character.
-     * @throws     IndexOutOfBoundsException  if <code>index</code> is
-     *             negative or greater than or equal to <code>length()</code>.
+     * 设置在index位置上的字符为ch
      */
     public void setCharAt(int index, char ch) {
         if ((index < 0) || (index >= count))
@@ -353,37 +251,14 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
-     * Appends the string representation of the {@code Object} argument.
-     * <p>
-     * The overall effect is exactly as if the argument were converted
-     * to a string by the method {@link String#valueOf(Object)},
-     * and the characters of that string were then
-     * {@link #append(String) appended} to this character sequence.
-     *
-     * @param   obj   an {@code Object}.
-     * @return  a reference to this object.
+     * 添加一个Object对象
      */
     public AbstractStringBuilder append(Object obj) {
         return append(String.valueOf(obj));
     }
 
     /**
-     * Appends the specified string to this character sequence.
-     * <p>
-     * The characters of the {@code String} argument are appended, in
-     * order, increasing the length of this sequence by the length of the
-     * argument. If {@code str} is {@code null}, then the four
-     * characters {@code "null"} are appended.
-     * <p>
-     * Let <i>n</i> be the length of this character sequence just prior to
-     * execution of the {@code append} method. Then the character at
-     * index <i>k</i> in the new character sequence is equal to the character
-     * at index <i>k</i> in the old character sequence, if <i>k</i> is less
-     * than <i>n</i>; otherwise, it is equal to the character at index
-     * <i>k-n</i> in the argument {@code str}.
-     *
-     * @param   str   a string.
-     * @return  a reference to this object.
+     * 
      */
     public AbstractStringBuilder append(String str) {
         if (str == null) str = "null";
