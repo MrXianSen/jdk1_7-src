@@ -1,28 +1,3 @@
-/*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
 package java.util;
 
 /**
@@ -109,28 +84,6 @@ public abstract class AbstractCollection<E> implements Collection<E> {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>This implementation returns an array containing all the elements
-     * returned by this collection's iterator, in the same order, stored in
-     * consecutive elements of the array, starting with index {@code 0}.
-     * The length of the returned array is equal to the number of elements
-     * returned by the iterator, even if the size of this collection changes
-     * during iteration, as might happen if the collection permits
-     * concurrent modification during iteration.  The {@code size} method is
-     * called only as an optimization hint; the correct result is returned
-     * even if the iterator returns a different number of elements.
-     *
-     * <p>This method is equivalent to:
-     *
-     *  <pre> {@code
-     * List<E> list = new ArrayList<E>(size());
-     * for (E e : this)
-     *     list.add(e);
-     * return list.toArray();
-     * }</pre>
-     */
     public Object[] toArray() {
         // Estimate size of array; be prepared to see more or fewer elements
         Object[] r = new Object[size()];
@@ -143,33 +96,6 @@ public abstract class AbstractCollection<E> implements Collection<E> {
         return it.hasNext() ? finishToArray(r, it) : r;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>This implementation returns an array containing all the elements
-     * returned by this collection's iterator in the same order, stored in
-     * consecutive elements of the array, starting with index {@code 0}.
-     * If the number of elements returned by the iterator is too large to
-     * fit into the specified array, then the elements are returned in a
-     * newly allocated array with length equal to the number of elements
-     * returned by the iterator, even if the size of this collection
-     * changes during iteration, as might happen if the collection permits
-     * concurrent modification during iteration.  The {@code size} method is
-     * called only as an optimization hint; the correct result is returned
-     * even if the iterator returns a different number of elements.
-     *
-     * <p>This method is equivalent to:
-     *
-     *  <pre> {@code
-     * List<E> list = new ArrayList<E>(size());
-     * for (E e : this)
-     *     list.add(e);
-     * return list.toArray(a);
-     * }</pre>
-     *
-     * @throws ArrayStoreException  {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     */
     public <T> T[] toArray(T[] a) {
         // Estimate size of array; be prepared to see more or fewer elements
         int size = size();

@@ -18,13 +18,11 @@ package com.sun.image.codec.jpeg;
 
 
 /**
-
  * JPEGDecodeParam encapsulates tables and options necessary to
  * control decoding JPEG datastreams. Parameters are either set explicitly
  * by the application for encoding, or read from the JPEG header for
  * decoding.  In the case of decoding abbreviated data streams the
  * application may need to set some/all of the values it's self.  <p>
-
  * When working with BufferedImages ({@link
  * com.sun.image.codec.jpeg.JPEGImageDecoder#decodeAsBufferedImage}),
  * the codec will attempt to
@@ -35,18 +33,15 @@ package com.sun.image.codec.jpeg;
  * and perform the transformations themselves.  When decoding into a
  * raster ({@link com.sun.image.codec.jpeg.JPEGImageDecoder#decodeAsRaster})
  * no ColorSpace adjustments are made.
-
  * Note: The color ids described herein are simply enumerated values
  * that influence data processing by the JPEG codec.  JPEG compression
  * is by definition color blind.  These values are used as hints when
  * decompressing JPEG data.  Of particular interest is the default
  * conversion from YCbCr to sRGB when decoding buffered Images.<P>
-
  * Note: because JPEG is mostly color-blind color fidelity can not be
  * garunteed.  This will hopefully be rectified in the near future by
  * the wide spread inclusion of ICC-profiles in the JPEG data stream
  * (as a special marker).
-
  * The following is an example of the conversions that take place.
  * This is only a guide to the types of conversions that are allowed.
  * This list is likely to change in the future so it is
@@ -55,6 +50,7 @@ package com.sun.image.codec.jpeg;
  * with the BufferedImage returned rather than make assumtions.
  * <pre>
     DECODING:
+
 
     JPEG (Encoded) Color ID         BufferedImage ColorSpace
     =======================         ========================
